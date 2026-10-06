@@ -52,7 +52,8 @@
 ## Logs e erros
 
 - Nenhum log registra tokens, senhas ou cabeçalhos `Authorization`.
-- As mensagens ao usuário não mostram detalhes internos. O `error.tsx` não exibe a mensagem do erro.
+- As mensagens ao usuário não mostram detalhes internos. O `error.tsx` e o `global-error.tsx` não exibem a mensagem do erro.
+- Falha do banco ao verificar o acesso é tratada como erro, com a tela "Não foi possível abrir o Portal", e não como "acesso não autorizado".
 
 ## Cabeçalhos HTTP
 

@@ -19,7 +19,8 @@ Se uma fonte falha, as outras seguem e o processo termina com código 1, o que d
 **Falhas na coleta dia a dia (curvas e IMA-B):**
 - uma falha de rede num dia não descarta os demais: os dias bons são gravados e os que falharam ficam registrados em `coletas`;
 - a próxima execução busca de novo os dias úteis dos últimos 15 dias que ainda não têm dado;
-- uma mudança de formato interrompe a fonte.
+- uma mudança de formato interrompe a fonte;
+- com `--mercado-desde` ou `--curvas-desde`, a recarga busca de novo **todos** os dias desde a data informada, inclusive os já gravados.
 
 "Hoje" é calculado no fuso de Brasília, porque o cron roda às 00h UTC.
 

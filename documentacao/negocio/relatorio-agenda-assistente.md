@@ -30,7 +30,7 @@
 - **corpo** com 3 a 5 destaques e o link da planilha;
 - **anexo** `.xlsx`.
 
-A rota chama `drafts.create` e devolve o link da pasta Rascunhos.
+A rota chama `drafts.create` e devolve o link da pasta Rascunhos. Se o rascunho for criado no Gmail mas o registro no Portal falhar, a tela avisa que ele já existe em Rascunhos, para não criar outro.
 
 **O Portal nunca envia e-mails.** O escopo `gmail.compose` permitiria enviar, mas o módulo `servicos/google/gmail.ts` só cria rascunhos, e um teste falha se aparecer qualquer chamada de envio.
 
