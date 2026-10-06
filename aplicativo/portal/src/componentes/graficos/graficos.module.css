@@ -1,0 +1,127 @@
+.grafico {
+  width: 100%;
+  min-width: 0;
+}
+
+.painel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-4);
+  min-width: 0;
+}
+
+.painel h2 {
+  font-size: 20px;
+}
+
+.subtitulo {
+  margin: 0;
+  color: var(--texto-secundario);
+  font-size: 11px;
+}
+
+.fonte {
+  margin: 0;
+  color: var(--texto-secundario);
+  font-size: 10px;
+}
+
+/* --- Gráfico de retornos ------------------------------------------------------ */
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-2);
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-2);
+  padding: 6px 12px;
+  border: 1px solid var(--linha);
+  background: transparent;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+.chip[aria-pressed="true"] {
+  border-color: var(--perfin-blue);
+  background: var(--perfin-blue);
+  color: var(--perfin-white);
+}
+
+.amostra {
+  width: 12px;
+  height: 2px;
+  display: inline-block;
+}
+
+.controles {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: var(--sp-4);
+}
+
+.controles label {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-1);
+  font-size: 11px;
+  color: var(--texto-secundario);
+}
+
+.controles input,
+.controles select {
+  padding: 6px 8px;
+  border: 1px solid var(--linha);
+  background: var(--perfin-white);
+  color: var(--texto);
+}
+
+.areaGrafico {
+  position: relative;
+  user-select: none;
+}
+
+.dica {
+  margin: 0;
+  font-size: 11px;
+  color: var(--texto-secundario);
+}
+
+.cartaoSelecao {
+  border-top: 1px solid var(--perfin-blue);
+  padding-top: var(--sp-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-3);
+}
+
+.cartaoSelecao h3 {
+  font-size: 16px;
+}
+
+.listaRetornos {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: var(--sp-2) var(--sp-6);
+}
+
+.listaRetornos li {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--sp-4);
+  padding: var(--sp-2) 0;
+  border-bottom: 1px solid var(--linha);
+}
+
+.acoes {
+  display: flex;
+  gap: var(--sp-3);
+  flex-wrap: wrap;
+}

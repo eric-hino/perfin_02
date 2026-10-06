@@ -1,0 +1,90 @@
+.cabecalho {
+  background: var(--perfin-blue);
+  color: var(--perfin-white);
+  padding: 0 var(--sp-6);
+}
+
+.pular {
+  position: absolute;
+  left: -9999px;
+}
+
+.pular:focus {
+  left: var(--sp-4);
+  top: var(--sp-4);
+  background: var(--perfin-white);
+  color: var(--perfin-blue);
+  padding: var(--sp-2) var(--sp-4);
+  z-index: 10;
+}
+
+.topo {
+  max-width: var(--largura-maxima);
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-4);
+  padding: var(--sp-6) 0 var(--sp-4);
+  border-bottom: 1px solid var(--perfin-divider-dark);
+}
+
+.marca {
+  font-family: var(--font-display);
+  font-size: 20px;
+}
+
+.usuario {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-4);
+  font-size: 12px;
+  color: var(--perfin-gray);
+  min-width: 0;
+}
+
+.usuario span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.sair {
+  background: transparent;
+  border: 1px solid var(--perfin-white);
+  color: var(--perfin-white);
+  padding: 6px 16px;
+  cursor: pointer;
+}
+
+.sair:hover {
+  background: var(--perfin-white);
+  color: var(--perfin-blue);
+}
+
+.nav {
+  max-width: var(--largura-maxima);
+  margin: 0 auto;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 var(--sp-6);
+  padding: var(--sp-3) 0;
+}
+
+.link {
+  font-family: var(--font-display);
+  font-size: 14px;
+  color: var(--perfin-gray);
+  text-decoration: none;
+  padding: var(--sp-2) 0;
+  border-bottom: 1px solid transparent;
+}
+
+.link:hover {
+  color: var(--perfin-white);
+}
+
+.ativo {
+  color: var(--perfin-white);
+  border-bottom-color: var(--perfin-white);
+}

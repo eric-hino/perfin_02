@@ -1,0 +1,57 @@
+.barra {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-4);
+  padding-bottom: var(--sp-4);
+  border-bottom: 1px solid var(--linha);
+}
+
+.janelas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0;
+}
+
+.chip {
+  padding: 6px 12px;
+  border: 1px solid var(--linha);
+  margin: 0 -1px -1px 0;
+  background: transparent;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+.chip[aria-pressed="true"] {
+  background: var(--perfin-blue);
+  border-color: var(--perfin-blue);
+  color: var(--perfin-white);
+  position: relative;
+}
+
+.campos {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: var(--sp-6);
+}
+
+.campos label {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-1);
+  font-size: 11px;
+  color: var(--texto-secundario);
+}
+
+.campos input,
+.campos select {
+  padding: 6px 8px;
+  border: 1px solid var(--linha);
+  background: var(--perfin-white);
+  color: var(--texto);
+}
+
+.status {
+  font-size: 11px;
+  color: var(--texto-secundario);
+}

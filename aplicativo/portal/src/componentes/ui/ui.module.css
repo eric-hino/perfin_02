@@ -1,0 +1,136 @@
+.aviso {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-3);
+  padding: var(--sp-8) 0;
+  border-top: 1px solid var(--linha);
+  max-width: 70ch;
+}
+
+.aviso p {
+  margin: 0;
+  color: var(--texto-secundario);
+}
+
+.botaoPrimario,
+.botaoSecundario {
+  padding: 12px 24px;
+  cursor: pointer;
+  transition: background-color 200ms ease, color 200ms ease;
+  align-self: flex-start;
+  text-decoration: none;
+  display: inline-block;
+}
+
+.botaoPrimario {
+  background: var(--perfin-blue);
+  color: var(--perfin-white);
+  border: 1px solid var(--perfin-blue);
+}
+
+.botaoPrimario:hover:not(:disabled) {
+  background: transparent;
+  color: var(--perfin-blue);
+}
+
+.botaoSecundario {
+  background: transparent;
+  color: var(--perfin-blue);
+  border: 1px solid var(--perfin-blue);
+}
+
+.botaoSecundario:hover:not(:disabled) {
+  background: var(--perfin-blue);
+  color: var(--perfin-white);
+}
+
+.botaoPrimario:disabled,
+.botaoSecundario:disabled {
+  opacity: 0.5;
+  cursor: wait;
+}
+
+.secao {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-4);
+}
+
+.cabecalhoSecao {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-1);
+  padding-bottom: var(--sp-3);
+  border-bottom: 1px solid var(--linha);
+}
+
+.subtitulo {
+  margin: 0;
+  color: var(--texto-secundario);
+  font-size: 12px;
+}
+
+.fonte {
+  margin: 0;
+  color: var(--texto-secundario);
+  font-size: 10px;
+}
+
+.grade {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: var(--sp-10) var(--sp-6);
+}
+
+.tabela {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.tabela th {
+  font-family: var(--font-display);
+  font-size: 12px;
+  font-weight: 700;
+  text-align: left;
+  padding: var(--sp-3) var(--sp-2);
+  border-bottom: 1px solid var(--perfin-blue);
+  white-space: nowrap;
+}
+
+.tabela td {
+  padding: var(--sp-3) var(--sp-2);
+  border-bottom: 1px solid var(--linha);
+}
+
+.tabela td.num,
+.tabela th.num {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.rolagem {
+  overflow-x: auto;
+}
+
+.aviso_legal {
+  margin: 0;
+  font-size: 12px;
+  color: var(--texto-secundario);
+  border-left: 2px solid var(--perfin-blue-4);
+  padding-left: var(--sp-3);
+}
+
+.abas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-4);
+  font-size: 12px;
+}
+
+.abas a[aria-current="true"] {
+  font-weight: 700;
+  text-decoration: none;
+  border-bottom: 1px solid var(--perfin-blue);
+}

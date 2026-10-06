@@ -1,0 +1,14 @@
+.celula {
+  text-decoration: none;
+  display: block;
+}
+
+.celula:hover {
+  text-decoration: underline;
+}
+
+.anual {
+  display: block;
+  font-size: 10px;
+  color: var(--texto-secundario);
+}

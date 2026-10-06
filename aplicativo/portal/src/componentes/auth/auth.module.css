@@ -1,0 +1,70 @@
+.botaoEscuro,
+.botaoClaro {
+  width: 100%;
+  padding: 12px 24px;
+  cursor: pointer;
+  transition: background-color 200ms ease, color 200ms ease;
+}
+
+/* Sobre fundo escuro: borda off-white, fundo transparente; hover inverte. */
+.botaoEscuro {
+  background: transparent;
+  border: 1px solid var(--perfin-white);
+  color: var(--perfin-white);
+}
+
+.botaoEscuro:hover:not(:disabled) {
+  background: var(--perfin-white);
+  color: var(--perfin-blue);
+}
+
+/* Sobre fundo claro: primário azul Perfin. */
+.botaoClaro {
+  width: auto;
+  background: var(--perfin-blue);
+  border: 1px solid var(--perfin-blue);
+  color: var(--perfin-white);
+}
+
+.botaoClaro:hover {
+  background: transparent;
+  color: var(--perfin-blue);
+}
+
+.botaoEscuro:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+
+.formulario {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+  margin-top: var(--sp-4);
+}
+
+.formulario label {
+  font-size: 12px;
+  color: var(--perfin-gray);
+}
+
+.formulario input {
+  padding: var(--sp-3);
+  background: transparent;
+  border: 1px solid var(--perfin-divider-dark);
+  color: var(--perfin-white);
+  margin-bottom: var(--sp-2);
+}
+
+.erro {
+  margin: 0;
+  color: var(--perfin-white);
+  border-left: 2px solid var(--perfin-red);
+  padding-left: var(--sp-3);
+}
+
+.botaoLink {
+  display: block;
+  text-align: center;
+  text-decoration: none;
+}

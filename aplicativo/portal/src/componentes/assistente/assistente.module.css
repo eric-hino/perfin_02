@@ -1,0 +1,126 @@
+.abrir {
+  position: fixed;
+  right: var(--sp-6);
+  bottom: var(--sp-6);
+  z-index: 20;
+  padding: 12px 24px;
+  background: var(--perfin-blue);
+  color: var(--perfin-white);
+  border: 1px solid var(--perfin-blue);
+  cursor: pointer;
+}
+
+.abrir:hover {
+  background: var(--perfin-blue-3);
+}
+
+.painel {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: min(420px, 100vw);
+  z-index: 15;
+  background: var(--perfin-blue);
+  color: var(--perfin-white);
+  display: flex;
+  flex-direction: column;
+  padding: var(--sp-6) var(--sp-6) 96px;
+  gap: var(--sp-4);
+  border-left: 1px solid var(--perfin-divider-dark);
+}
+
+.topo {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+  padding-bottom: var(--sp-4);
+  border-bottom: 1px solid var(--perfin-divider-dark);
+}
+
+.topo p {
+  margin: 0;
+  font-size: 12px;
+  color: var(--perfin-gray);
+}
+
+.mensagens {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-3);
+}
+
+.usuario,
+.resposta,
+.erro {
+  padding: var(--sp-3);
+  white-space: pre-wrap;
+  font-size: 13px;
+}
+
+.usuario {
+  align-self: flex-end;
+  max-width: 85%;
+  background: var(--perfin-blue-4);
+}
+
+.resposta {
+  border-left: 2px solid var(--perfin-white);
+}
+
+.erro {
+  border-left: 2px solid var(--perfin-red);
+  color: var(--perfin-gray);
+}
+
+.sugestao {
+  width: 100%;
+  text-align: left;
+  padding: var(--sp-3);
+  background: transparent;
+  border: 1px solid var(--perfin-divider-dark);
+  color: var(--perfin-white);
+  cursor: pointer;
+}
+
+.sugestao:hover {
+  border-color: var(--perfin-white);
+}
+
+.formulario {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+}
+
+.formulario textarea {
+  resize: vertical;
+  padding: var(--sp-3);
+  background: transparent;
+  border: 1px solid var(--perfin-divider-dark);
+  color: var(--perfin-white);
+}
+
+.acoes {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--sp-2);
+}
+
+.acoes button {
+  padding: 8px 16px;
+  background: transparent;
+  border: 1px solid var(--perfin-white);
+  color: var(--perfin-white);
+  cursor: pointer;
+}
+
+.acoes button:disabled {
+  opacity: 0.4;
+  cursor: default;
+}

@@ -1,0 +1,5 @@
+# Mantém LF no repositório (Windows, GitHub Actions e Vercel).
+* text=auto eol=lf
+*.zip binary
+*.png binary
+*.ico binary

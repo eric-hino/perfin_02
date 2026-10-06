@@ -1,0 +1,29 @@
+/* Identidade Perfin: azul-marinho e off-white, cantos retos, sem sombras. */
+:root {
+  --perfin-blue: #101b2a;
+  --perfin-blue-4: #415765;
+  --perfin-white: #f9f4f4;
+  --perfin-gray: #e6e7e8;
+  --perfin-gray-dark: #6d6e71;
+  --perfin-red: #a6452f;
+  --font-display: var(--fonte-titulo), "Century Gothic", sans-serif;
+  --font-body: var(--fonte-corpo), "Segoe UI", Helvetica, sans-serif;
+}
+
+*, *::before, *::after { box-sizing: border-box; border-radius: 0; box-shadow: none; }
+
+html, body { margin: 0; padding: 0; overflow-x: hidden; }
+
+body {
+  background: var(--perfin-white);
+  color: var(--perfin-blue);
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+h1, h2, h3 { font-family: var(--font-display); font-weight: 400; margin: 0; }
+
+button, input, select { font: inherit; color: inherit; }
+
+:focus-visible { outline: 2px solid #004c88; outline-offset: 2px; }

@@ -1,0 +1,90 @@
+.hero,
+.faixaArdosia,
+.faixaClara {
+  padding: 80px max(24px, calc((100vw - 1200px) / 2));
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.hero {
+  min-height: 70vh;
+  justify-content: center;
+  background: var(--perfin-blue);
+  color: var(--perfin-white);
+}
+
+.hero h1 { font-size: 48px; line-height: 1; }
+.hero p { margin: 0; color: var(--perfin-gray); max-width: 60ch; }
+
+.marca {
+  font-size: 12px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(249, 244, 244, 0.25);
+}
+
+.botao {
+  align-self: flex-start;
+  padding: 12px 24px;
+  border: 1px solid var(--perfin-white);
+  color: var(--perfin-white);
+  text-decoration: none;
+  transition: background-color 200ms ease, color 200ms ease;
+}
+
+.botao:hover { background: var(--perfin-white); color: var(--perfin-blue); }
+
+.faixaArdosia { background: var(--perfin-blue-4); color: var(--perfin-white); }
+
+.faixaClara { border-top: 1px solid var(--perfin-gray); }
+
+.recursos,
+.cartoes {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 24px;
+}
+
+.recursos li { border-top: 1px solid rgba(249, 244, 244, 0.25); padding-top: 16px; }
+.recursos p { margin: 8px 0 0; color: var(--perfin-gray); font-size: 14px; }
+
+.cartoes li { border-top: 1px solid var(--perfin-gray); padding-top: 16px; }
+.cartoes h3 { font-family: var(--font-body); font-size: 12px; color: var(--perfin-gray-dark); }
+
+.numero { margin: 4px 0; font-family: var(--font-display); font-size: 32px; font-variant-numeric: tabular-nums; }
+
+.secundario { margin: 0; color: var(--perfin-gray-dark); font-size: 13px; }
+
+.fonte { margin: 0; color: var(--perfin-gray-dark); font-size: 10px; }
+
+.formulario {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  align-items: flex-end;
+}
+
+.formulario label { display: flex; flex-direction: column; gap: 4px; font-size: 12px; color: var(--perfin-gray-dark); }
+
+.formulario input,
+.formulario select { padding: 8px; border: 1px solid var(--perfin-gray); background: var(--perfin-white); color: var(--perfin-blue); }
+
+.formulario button {
+  padding: 12px 24px;
+  background: var(--perfin-blue);
+  color: var(--perfin-white);
+  border: 1px solid var(--perfin-blue);
+  cursor: pointer;
+}
+
+.formulario button:hover:not(:disabled) { background: transparent; color: var(--perfin-blue); }
+
+.resultado,
+.erro { flex-basis: 100%; margin: 0; }
+
+.erro { color: var(--perfin-red); }
+
+.rodape { padding: 24px; font-size: 10px; color: var(--perfin-gray-dark); border-top: 1px solid var(--perfin-gray); }

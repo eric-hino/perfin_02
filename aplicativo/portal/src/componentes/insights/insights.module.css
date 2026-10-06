@@ -1,0 +1,36 @@
+.lista {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 0 var(--sp-6);
+}
+
+.lista li {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-1);
+  padding: var(--sp-4) 0 var(--sp-4) var(--sp-4);
+  border-top: 1px solid var(--linha);
+  border-left: 2px solid var(--perfin-gray-dark);
+}
+
+.lista p {
+  margin: 0;
+  color: var(--texto);
+}
+
+.alerta { border-left-color: var(--perfin-red) !important; }
+.atencao { border-left-color: var(--perfin-blue-2) !important; }
+.informativo { border-left-color: var(--perfin-blue-4) !important; }
+
+.selo {
+  font-size: 10px;
+  color: var(--texto-secundario);
+}
+
+.vazio {
+  margin: 0;
+  color: var(--texto-secundario);
+}
