@@ -88,3 +88,58 @@
 .erro { color: var(--perfin-red); }
 
 .rodape { padding: 24px; font-size: 10px; color: var(--perfin-gray-dark); border-top: 1px solid var(--perfin-gray); }
+
+/* Cabeçalho sobre o hero: mesma cor de fundo, marca à esquerda e acesso à direita. */
+.cabecalho {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 16px max(24px, calc((100vw - 1200px) / 2));
+  background: var(--perfin-blue);
+  color: var(--perfin-white);
+  border-bottom: 1px solid rgba(249, 244, 244, 0.25);
+}
+
+.wordmark {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 16px;
+  letter-spacing: 0.02em;
+}
+
+.acesso {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.linkEntrar,
+.botaoCadastrar {
+  color: var(--perfin-white);
+  font-size: 14px;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.linkEntrar:hover { text-decoration: underline; }
+
+.botaoCadastrar {
+  padding: 8px 20px;
+  border: 1px solid var(--perfin-white);
+  transition: background-color 200ms ease, color 200ms ease;
+}
+
+.botaoCadastrar:hover { background: var(--perfin-white); color: var(--perfin-blue); }
+
+/* O contorno de foco padrão (azul) some no fundo escuro. */
+.cabecalho a:focus-visible,
+.hero a:focus-visible { outline-color: var(--perfin-white); }
+
+@media (max-width: 480px) {
+  .cabecalho { padding: 12px 16px; gap: 12px; }
+  .acesso { gap: 16px; }
+  .linkEntrar,
+  .botaoCadastrar { font-size: 13px; }
+  .botaoCadastrar { padding: 6px 12px; }
+}

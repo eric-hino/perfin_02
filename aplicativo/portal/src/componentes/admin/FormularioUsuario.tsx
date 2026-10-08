@@ -9,14 +9,21 @@ import ui from "../ui/ui.module.css";
 
 const INICIAL: EstadoAcao = { erro: null, sucesso: null };
 
-/** Inclui um e-mail Google na lista de acesso. */
+/** Pré-cadastra um e-mail para definir o papel antes do primeiro acesso. */
 export default function FormularioUsuario() {
   const [estado, acao, enviando] = useActionState(incluirUsuarioAcao, INICIAL);
   return (
     <form action={acao} className={ui.secao}>
+      <p className={ui.subtitulo}>
+        Qualquer pessoa pode se cadastrar no Portal e entra como usuário. Inclua um e-mail aqui só para já
+        definir o papel (por exemplo, administrador) antes do primeiro acesso.
+      </p>
       <div className={estilos.controles}>
-        <label>E-mail Google
-          <input name="email" type="email" required maxLength={254} placeholder="nome@gmail.com" />
+        <label>Nome (opcional)
+          <input name="nome" type="text" maxLength={100} autoComplete="off" />
+        </label>
+        <label>E-mail
+          <input name="email" type="email" required maxLength={254} placeholder="nome@exemplo.com" />
         </label>
         <label>Papel
           <select name="papel" defaultValue="usuario">

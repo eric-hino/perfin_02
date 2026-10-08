@@ -23,8 +23,9 @@ O Portal Perfin é a central de análise de indicadores econômicos do time. Ele
 
 - [Arquitetura](arquitetura.md)
 - [Configuração (Vercel, Google Cloud, Supabase, GitHub)](configuracao.md)
+- [Instruções do login e cadastro unificados (PDF)](instrucoes/login-e-cadastro.pdf)
 - [Segurança](seguranca.md)
 - [Coletor](coletor.md)
 - [Banco de dados](banco.md)
 - [Site público](site.md)
-- [Testes e comandos](testes.md)
+- [Testes, comandos e CI](testes.md)

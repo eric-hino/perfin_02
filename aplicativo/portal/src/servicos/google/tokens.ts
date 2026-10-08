@@ -7,6 +7,26 @@ import { clienteSupabase } from "../supabase/servidor";
 import { cifrar, decifrar } from "./cripto";
 import { ErroGoogleReconectar } from "./erros";
 
+const TEMPO_TOKENINFO_MS = 5000;
+
+/**
+ * Escopos realmente concedidos a um access token do Google (o usuário pode
+ * desmarcar permissões na tela de consentimento). Em qualquer erro, devolve [].
+ */
+export async function escoposConcedidos(accessToken: string): Promise<string[]> {
+  try {
+    const url = `https://oauth2.googleapis.com/tokeninfo?access_token=${encodeURIComponent(accessToken)}`;
+    const resposta = await fetch(url, { cache: "no-store", signal: AbortSignal.timeout(TEMPO_TOKENINFO_MS) });
+    if (!resposta.ok) return [];
+    const corpo = (await resposta.json()) as { scope?: unknown; aud?: unknown };
+    // O token precisa ter sido emitido para o cliente OAuth do Portal.
+    if (corpo.aud !== ambiente().GOOGLE_CLIENT_ID || typeof corpo.scope !== "string") return [];
+    return corpo.scope.split(" ").filter(Boolean);
+  } catch {
+    return [];
+  }
+}
+
 /** Grava o refresh token do Google, cifrado, para o próprio usuário (RLS). */
 export async function salvarRefreshToken(
   supabase: SupabaseClient,

@@ -44,7 +44,7 @@ export default function GerarRelatorio({ mesPadrao, mesMaximo }: { mesPadrao: st
         </button>
       </div>
       {estado.erro && <p role="alert" className="negativo">{estado.erro}</p>}
-      {estado.reconectar && <AvisoReconectar />}
+      {estado.reconectar && <AvisoReconectar destino="relatorios" />}
       {estado.url && (
         <p role="status">Planilha criada na pasta &quot;Portal Perfin&quot; do seu Drive: <a href={estado.url} target="_blank" rel="noopener noreferrer">abrir no Google Planilhas</a>.</p>
       )}

@@ -57,12 +57,14 @@ def parametros_conexao() -> dict:
     """
     A conexão direta db.<ref>.supabase.co só tem IPv6. Em redes sem IPv6,
     usa o Session Pooler (IPv4) com o usuário postgres.<ref>.
+    O SSL é obrigatório, exceto no Supabase local (localhost), que não usa SSL.
     """
     url = urlsplit(ler_variavel("DATABASE_URL"))
+    local = url.hostname in ("localhost", "127.0.0.1", "::1")
     params = {
         "host": url.hostname, "port": url.port or 5432, "user": unquote(url.username or ""),
         "password": unquote(url.password or ""), "dbname": (url.path or "/postgres").lstrip("/"),
-        "sslmode": "require", "connect_timeout": 20,
+        "sslmode": "disable" if local else "require", "connect_timeout": 20,
     }
     eh_direta = bool(re.fullmatch(r"db\.[a-z0-9]+\.supabase\.co", url.hostname or ""))
     if eh_direta and not tem_ipv4(url.hostname):

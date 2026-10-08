@@ -12,7 +12,7 @@ Neste guia:
 | Site | Projeto Vercel `perfin-site` (Root Directory `website`), no ar |
 | Portal | Projeto Vercel `perfin-portal` criado (Root Directory `aplicativo/portal`, Node 24, Git conectado), com as variáveis de produção cadastradas; URL `https://perfin-portal.vercel.app` |
 | Coletor | Secret `COLETOR_DATABASE_URL` gravado no GitHub; workflow rodando com sucesso |
-| Ainda falta | Google Cloud (seção 2) e Supabase (seção 3): sem isso a página de login abre, mas o "Entrar com Google" não completa |
+| Google Cloud e Supabase | Configurados em 08/10/2026 (cliente OAuth, branding, escopos, app em produção; provedor Google, URLs e Auth Hook). O login com Google funciona |
 
 **Problemas que já aconteceram:**
 - "Entrar no Portal" mostrava "This page doesn't exist". O site aponta para `NEXT_PUBLIC_PORTAL_URL`, e o projeto do Portal não existia na Vercel (`DEPLOYMENT_NOT_FOUND`).
@@ -22,6 +22,24 @@ Neste guia:
   GH_TOKEN="$(gh auth token)" python aplicativo/supabase/banco.py senha-coletor --github
   ```
 - **Não use `vercel deploy` a partir da pasta do repositório:** o CLI envia arquivos locais fora do git, como `.env` e `dados_perfin.txt`. O deploy é feito pelo `git push`, com o Git conectado.
+
+## Login e cadastro unificados (09/10/2026)
+
+O passo a passo completo, com quem faz cada etapa, está em `documentacao/instrucoes/login-e-cadastro.pdf`.
+
+**Google Cloud:** nada novo. A redirect URI continua `https://<ref>.supabase.co/auth/v1/callback`, a mesma para o site e para o Portal, porque o site só chama a tela do Portal.
+
+**Supabase:**
+- **Sign In / Providers → Email:**
+  - *Allow new users to sign up*, *Confirm email* e *Secure email change* ligados;
+  - senha mínima de 12, exigindo letras e dígitos.
+- **URL Configuration → Redirect URLs:** `<portal>/auth/callback` e **`<portal>/auth/confirmar`**.
+- **Emails → Templates:** "Confirm signup" e "Reset password" em pt-BR, com links `{{ .SiteURL }}/auth/confirmar?token_hash={{ .TokenHash }}&type=email` e `&type=recovery`. Os textos estão no anexo do PDF.
+- **SMTP:** por ora, o padrão do Supabase, que envia poucos e-mails por hora. Para mais volume, configure um SMTP próprio (ex.: Resend).
+
+**Vercel:** nenhuma variável nova. As variáveis do Portal também vão para *Preview*, para que o deploy de teste das PRs compile.
+
+**GitHub:** o `main` exige PR com os cinco checks do CI verdes (ver `testes.md`).
 
 ## 1. Vercel
 
@@ -82,10 +100,10 @@ O nome do projeto define a URL `https://<nome>.vercel.app`.
 As migrações já foram aplicadas e o admin principal já está em `usuarios_autorizados`.
 
 1. **Authentication → Sign In / Providers → Google:** ative e cole o Client ID e o Client Secret.
-2. **Authentication → Sign In / Providers → Email:** mantenha ativo (é o login do admin), com *Confirm email* ligado.
+2. **Authentication → Sign In / Providers → Email:** mantenha ativo, com *Confirm email* ligado (cadastro aberto, ver a seção "Login e cadastro unificados").
 3. **Authentication → URL Configuration:**
    - **Site URL** = `<portal>`
-   - **Redirect URLs** = `<portal>/auth/callback`
+   - **Redirect URLs** = `<portal>/auth/callback` e `<portal>/auth/confirmar`
 4. **Authentication → Users → Add user:**
    - e-mail = `ADMIN_EMAIL`, com uma **senha forte nova** (16 caracteres ou mais) e *Auto Confirm*;
    - a senha fica só no Supabase, e a `ADMIN_PASSWORD` pode sair do `.env`.

@@ -28,7 +28,7 @@ export default async function Agenda() {
   return (
     <>
       <TituloPagina titulo="Agenda" subtitulo="Suas próximas reuniões no Google Agenda (14 dias, horário de Brasília)" />
-      {resultado.tipo === "reconectar" && <AvisoReconectar />}
+      {resultado.tipo === "reconectar" && <AvisoReconectar destino="agenda" />}
       {resultado.tipo === "erro" && (
         <EstadoVazio titulo="Não foi possível ler a agenda" texto="O Google não respondeu agora. Tente novamente em instantes." />
       )}
