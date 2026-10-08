@@ -35,8 +35,10 @@ async function executar(acao: () => Promise<void>, sucesso: string): Promise<Est
 }
 
 export async function incluirUsuarioAcao(_e: EstadoAcao, formulario: FormData): Promise<EstadoAcao> {
-  const entrada = esquemaNovoUsuario.safeParse({ email: formulario.get("email"), papel: formulario.get("papel") });
-  if (!entrada.success) return ERRO("Informe um e-mail válido e o papel.");
+  const entrada = esquemaNovoUsuario.safeParse({
+    email: formulario.get("email"), papel: formulario.get("papel"), nome: formulario.get("nome"),
+  });
+  if (!entrada.success) return ERRO("Informe um e-mail válido, o papel e, se quiser, um nome de até 100 caracteres.");
   return executar(() => incluirUsuario(entrada.data), `${entrada.data.email} incluído.`);
 }
 

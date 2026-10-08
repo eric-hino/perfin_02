@@ -1,5 +1,7 @@
 # Relatório do mês, Gmail, Agenda e Assistente
 
+Relatórios e Agenda usam a conta Google do usuário. A autorização é pedida na primeira vez, pelo botão **Conectar conta Google**.
+
 ## Relatório do mês (`/relatorios`)
 
 1. O usuário escolhe um mês fechado. O padrão é o último.
@@ -38,7 +40,7 @@ A rota chama `drafts.create` e devolve o link da pasta Rascunhos. Se o rascunho 
 
 - Lê o Google Agenda do usuário logado (`calendar.events.readonly`): agenda principal, próximos 14 dias, até 20 eventos, sem os cancelados.
 - Mostra título, horário de Brasília (ou "Dia inteiro"), local e os links do Meet e do evento. Só aceita links https dos domínios do Google.
-- Sem autorização do Google, a tela mostra **Conectar conta Google**.
+- Sem autorização do Google, a tela mostra **Conectar conta Google**. O login não pede esses escopos: Agenda, Drive e Gmail são autorizados só por quem usa (ver `perfis-e-acesso.md`). Depois da autorização, o Google volta para a mesma tela (Agenda ou Relatórios).
 
 ## Assistente (painel lateral)
 

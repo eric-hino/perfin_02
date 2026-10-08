@@ -1,15 +1,17 @@
+import type { DestinoConectar } from "@/dominio/auth/conectar";
+
 import BotaoGoogle from "../auth/BotaoGoogle";
 import ui from "../ui/ui.module.css";
 
-/** Pede para reconectar a conta Google quando a autorização expirou ou não existe. */
-export default function AvisoReconectar() {
+/** Pede para conectar a conta Google (Agenda, Drive e Gmail) quando não há autorização válida. */
+export default function AvisoReconectar({ destino }: { destino: DestinoConectar }) {
   return (
     <div className={ui.secao}>
       <p className={ui.aviso_legal}>
-        Para usar o Google Agenda, o Drive e o Gmail, conecte sua conta Google (se você entrou com e-mail e senha,
-        use o mesmo e-mail do administrador).
+        Para usar a Agenda e os relatórios, autorize o acesso à sua conta Google (Agenda, Drive e Gmail — o Portal
+        só cria rascunhos, nunca envia).
       </p>
-      <BotaoGoogle rotulo="Conectar conta Google" claro />
+      <BotaoGoogle rotulo="Conectar conta Google" claro modo="conectar" destino={destino} />
     </div>
   );
 }

@@ -68,3 +68,62 @@
   text-align: center;
   text-decoration: none;
 }
+
+.abas {
+  display: flex;
+  gap: var(--sp-6);
+  border-bottom: 1px solid var(--perfin-divider-dark);
+}
+
+.aba {
+  padding: var(--sp-2) 0;
+  margin-bottom: -1px;
+  color: var(--perfin-gray);
+  text-decoration: none;
+  border-bottom: 2px solid transparent;
+}
+
+.aba:hover {
+  color: var(--perfin-white);
+}
+
+.abaAtiva {
+  color: var(--perfin-white);
+  border-bottom-color: var(--perfin-white);
+}
+
+.linhaRotulo {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: var(--sp-3);
+}
+
+.linkDiscreto {
+  font-size: 12px;
+  color: var(--perfin-gray);
+}
+
+.dica {
+  margin: 0 0 var(--sp-2);
+  font-size: 12px;
+  color: var(--perfin-gray);
+}
+
+.confirmacao {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-3);
+  margin-top: var(--sp-4);
+  padding: var(--sp-4);
+  border: 1px solid var(--perfin-divider-dark);
+}
+
+.confirmacao h2 {
+  margin: 0;
+  font-size: 18px;
+}
+
+.confirmacao p {
+  margin: 0;
+}

@@ -22,3 +22,14 @@ export function urlDoPortal(): string | null {
   const url = process.env.NEXT_PUBLIC_PORTAL_URL;
   return url && /^https:\/\//.test(url) ? url.replace(/\/+$/, "") : null;
 }
+
+export interface LinksDoPortal {
+  entrar: string;
+  cadastrar: string;
+}
+
+/** Links de acesso ao Portal (entrar e cadastrar); null quando não há URL do Portal. */
+export function linksDoPortal(portal: string | null): LinksDoPortal | null {
+  if (!portal) return null;
+  return { entrar: `${portal}/login`, cadastrar: `${portal}/login?aba=cadastro` };
+}

@@ -5,7 +5,8 @@ import { type NextRequest, NextResponse } from "next/server";
 // grosso para o login. A autorização de verdade acontece em exigirPerfil()
 // em cada layout e route handler, e no RLS do banco.
 
-const ROTAS_PUBLICAS = ["/login", "/auth/", "/acesso-nao-autorizado", "/privacidade"];
+// /redefinir-senha não é pública: a sessão de recuperação (link do e-mail) conta como sessão.
+const ROTAS_PUBLICAS = ["/login", "/auth/", "/acesso-nao-autorizado", "/privacidade", "/esqueci-senha"];
 
 export async function proxy(request: NextRequest) {
   let resposta = NextResponse.next({ request });

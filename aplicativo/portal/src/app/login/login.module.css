@@ -37,15 +37,36 @@
   color: var(--perfin-white);
 }
 
-.admin {
-  margin-top: var(--sp-8);
-  padding-top: var(--sp-4);
+.divisor {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  margin: 0;
+  font-size: 12px;
+  color: var(--perfin-gray);
+}
+
+.divisor::before,
+.divisor::after {
+  content: "";
+  flex: 1;
   border-top: 1px solid var(--perfin-divider-dark);
 }
 
-.admin summary {
-  cursor: pointer;
-  color: var(--perfin-gray);
+.voltar {
+  margin-top: var(--sp-4);
   font-size: 12px;
-  text-decoration: underline;
+  color: var(--perfin-gray);
+}
+
+/* O foco padrão (azul) some sobre o fundo azul: aqui ele é off-white. */
+.pagina :focus-visible {
+  outline-color: var(--perfin-white);
+}
+
+@media (max-width: 600px) {
+  .pagina {
+    align-items: flex-start;
+    padding: var(--sp-10) var(--sp-4);
+  }
 }

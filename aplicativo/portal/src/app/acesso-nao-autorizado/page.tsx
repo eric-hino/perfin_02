@@ -18,7 +18,7 @@ export default async function AcessoNaoAutorizado({ searchParams }: PageProps<"/
         <p className={estilos.subtitulo}>
           {soAdmin
             ? "Esta área é exclusiva de administradores."
-            : "Seu e-mail não está na lista de acesso do Portal. Peça ao administrador para incluí-lo."}
+            : "Seu acesso foi bloqueado ou removido pelo administrador."}
         </p>
         {soAdmin ? (
           <Link href="/visao-geral" className={`${auth.botaoEscuro} ${auth.botaoLink}`}>

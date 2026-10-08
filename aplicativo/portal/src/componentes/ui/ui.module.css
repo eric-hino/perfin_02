@@ -112,6 +112,17 @@
 
 .rolagem {
   overflow-x: auto;
+  max-width: 100%;
+}
+
+.rolagem:focus-visible {
+  outline: 2px solid var(--perfin-blue);
+  outline-offset: 2px;
+}
+
+/* Tabelas com muitas colunas: mantêm uma largura mínima e rolam dentro de .rolagem. */
+.tabelaLarga {
+  min-width: 720px;
 }
 
 .aviso_legal {

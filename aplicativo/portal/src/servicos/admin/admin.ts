@@ -2,12 +2,16 @@ import "server-only";
 
 import { z } from "zod";
 
+import { NOME_MAXIMO, type OrigemUsuario, nomeValido, normalizarNome } from "@/dominio/admin/usuarios";
+
 import { clienteSupabase } from "../supabase/servidor";
 
 // Todas as operações passam pelo RLS: só administradores conseguem ler e alterar.
 
 export interface UsuarioAutorizado {
   email: string;
+  nome: string | null;
+  origem: OrigemUsuario;
   papel: "admin" | "usuario";
   ativo: boolean;
   principal: boolean;
@@ -21,18 +25,30 @@ export async function listarUsuarios(): Promise<UsuarioAutorizado[]> {
   const supabase = await clienteSupabase();
   const { data, error } = await supabase
     .from("usuarios_autorizados")
-    .select("email,papel,ativo,principal,criado_por,criado_em")
+    .select("email,nome,origem,papel,ativo,principal,criado_por,criado_em")
     .order("principal", { ascending: false })
     .order("email");
   if (error) throw new ErroAdmin("Não foi possível listar os usuários.");
   return (data ?? []).map((u) => ({
-    email: u.email, papel: u.papel, ativo: u.ativo, principal: u.principal, criadoPor: u.criado_por, criadoEm: u.criado_em,
+    email: u.email,
+    nome: u.nome ?? null,
+    origem: u.origem === "cadastro" ? "cadastro" : "admin",
+    papel: u.papel,
+    ativo: u.ativo,
+    principal: u.principal,
+    criadoPor: u.criado_por,
+    criadoEm: u.criado_em,
   }));
 }
 
 export const esquemaNovoUsuario = z.object({
   email: z.email("E-mail inválido.").max(254).transform((e) => e.trim().toLowerCase()),
   papel: z.enum(["admin", "usuario"]),
+  // Opcional: aparado, e string vazia vira ausente (a coluna fica nula).
+  nome: z.preprocess(
+    normalizarNome,
+    z.string().max(NOME_MAXIMO).refine(nomeValido, "Nome inválido.").optional(),
+  ),
 });
 
 export async function incluirUsuario(entrada: z.infer<typeof esquemaNovoUsuario>): Promise<void> {
@@ -51,9 +67,14 @@ export async function alterarUsuario(email: string, mudancas: { papel?: "admin" 
 
 export async function removerUsuario(email: string): Promise<void> {
   const supabase = await clienteSupabase();
-  const { error, count } = await supabase.from("usuarios_autorizados").delete({ count: "exact" }).eq("email", email);
+  // Contas criadas pelo cadastro não são removidas (perderiam o acesso sem marcação): use o bloqueio.
+  const { error, count } = await supabase
+    .from("usuarios_autorizados")
+    .delete({ count: "exact" })
+    .eq("email", email)
+    .eq("origem", "admin");
   if (error) throw new ErroAdmin(error.code === "42501" ? "O administrador principal não pode ser removido." : "Não foi possível remover o usuário.");
-  if (!count) throw new ErroAdmin("Usuário não encontrado.");
+  if (!count) throw new ErroAdmin("Usuário não encontrado ou criado pelo cadastro (use Bloquear).");
 }
 
 // --- Parâmetros ----------------------------------------------------------------------

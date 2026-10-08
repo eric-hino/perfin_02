@@ -56,3 +56,7 @@ dados_perfin.txt
 
 # --- Testes Python ---------------------------------------------
 .pytest_cache/
+
+# --- Supabase CLI (estado local do CI) --------------------------
+aplicativo/supabase/.temp/
+aplicativo/supabase/.branches/

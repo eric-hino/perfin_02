@@ -18,13 +18,26 @@
 
 ## Autenticação e autorização (em camadas)
 
-1. **Supabase Auth:** login Google (OAuth) ou e-mail e senha (só o admin principal). O Auth Hook recusa contas fora da lista.
+1. **Supabase Auth:** login Google (OAuth) ou e-mail e senha, com **cadastro aberto**.
+   - O cadastro por senha exige a confirmação do e-mail. Sem ela, ninguém consegue criar uma conta com o e-mail de outra pessoa e usá-la.
+   - O Auth Hook recusa e-mails bloqueados.
+   - O gatilho `registrar_usuario_cadastrado` dá sempre o papel `usuario`. Os metadados enviados pelo cliente nunca definem o papel.
 2. **`proxy.ts`:** valida o JWT (`getClaims`), renova a sessão e manda ao login quem não está logado.
 3. **`exigirPerfil()`** no layout do Portal e no layout Admin, e **`verificarPerfilApi()`** em toda rota de API e server action:
    - valida o usuário no servidor de autenticação (`getUser`) e o papel na lista;
    - responde 401 sem sessão e 403 sem permissão;
    - nunca libera por padrão.
 4. **RLS** em todas as tabelas: mesmo com a chave publicável, quem não está na lista não lê nada. O `service_role` não é usado.
+
+## Cadastro, confirmação e senha
+
+- **Senha:** 12 ou mais caracteres, com letras e números, e no máximo 72 bytes (limite do bcrypt). É validada no navegador, na server action e de novo pelo Supabase (comprimento mínimo configurado no painel).
+- **Respostas neutras:** o cadastro com um e-mail que já tem conta e o pedido de nova senha respondem a mesma coisa, sem revelar se o e-mail existe.
+- **`/auth/confirmar`:**
+  - valida `type` (`email`, `signup` ou `recovery`) e o formato do `token_hash` antes de chamar `verifyOtp`;
+  - redireciona só para destinos fixos, sem parâmetro `next`, o que evita open redirect;
+  - link inválido ou expirado leva a `/login?erro=link`.
+- **Login por senha de conta bloqueada:** a sessão é encerrada na hora.
 
 ## Validação de entradas
 
@@ -37,7 +50,14 @@
 
 ## Google
 
-- **Escopos:** `openid email profile`, `calendar.events.readonly`, `drive.file` (só arquivos criados pelo app) e `gmail.compose`.
+- **Escopos em duas etapas:**
+  - o login pede só `openid email profile`;
+  - `calendar.events.readonly`, `drive.file` (só arquivos criados pelo app) e `gmail.compose` são pedidos no **Conectar conta Google**.
+- **Conectar conta Google:**
+  - a action exige sessão e grava o cookie httpOnly `perfin_conectar` (10 minutos, `path=/auth`) com o id do usuário;
+  - o callback só guarda o refresh token se `conectar=1`, o cookie e a sessão nova forem do **mesmo** usuário. Outra conta Google encerra a sessão;
+  - os escopos gravados vêm do `tokeninfo` do Google, ou seja, são os concedidos de fato;
+  - o login simples nunca grava nem sobrescreve o token.
 - O refresh token é cifrado com AES-256-GCM (`GOOGLE_TOKEN_ENCRYPTION_KEY`) antes de ir ao banco, e cada usuário só lê o próprio (RLS).
 - **Nunca enviar e-mail:** o Google não tem escopo só de rascunho. O módulo `gmail.ts` expõe apenas `criarRascunho`, e o teste `mime.test.ts` falha se surgir chamada de envio.
 - **Links da agenda:** só são exibidos se forem https dos domínios do Google.

@@ -7,13 +7,14 @@ Migrações em `aplicativo/supabase/migrations/`, aplicadas por `python aplicati
 | `20261006120000_estrutura_portal.sql` | Tabelas, RLS, funções de perfil, Auth Hook, papel do coletor e privilégios |
 | `20261006120100_funcoes_publicas_e_catalogo.sql` | Catálogo de indicadores, parâmetros iniciais, `destaques_publicos()` e `corrigir_valor()` |
 | `20261006120200_leitura_em_lote.sql` | `series_valores()` e `curvas_do_dia()` (security invoker) |
-| `20261006120300_hook_senha_so_principal.sql` | Auth Hook: cadastro por senha só para o admin principal |
+| `20261006120300_hook_senha_so_principal.sql` | Auth Hook: cadastro por senha só para o admin principal (substituída pela regra abaixo) |
+| `20261009120000_cadastro_aberto.sql` | Cadastro aberto: colunas `nome` e `origem`, gatilho `registrar_usuario_cadastrado` em `auth.users` e Auth Hook que só recusa e-mail bloqueado |
 
 ## Tabelas (RLS ligado em todas; `anon` sem privilégio em nenhuma)
 
 | Tabela | Leitura | Escrita |
 |---|---|---|
-| `usuarios_autorizados` | admin | admin (o principal é protegido por gatilho) |
+| `usuarios_autorizados` | admin | admin: inclui (`email`, `papel`, `ativo`, `nome`) e altera `papel` e `ativo`. O principal é protegido por gatilho. As linhas de cadastro são criadas pelo gatilho em `auth.users` |
 | `indicadores` | autorizados, coletor | admin (`ativo`, `ordem`) |
 | `indicador_valores` | autorizados, coletor | coletor (insert/update; sem delete) |
 | `curvas_mercado` | autorizados, coletor | coletor |
@@ -28,7 +29,8 @@ Migrações em `aplicativo/supabase/migrations/`, aplicadas por `python aplicati
 | Função | Quem executa | Para quê |
 |---|---|---|
 | `perfil_atual()`, `eh_autorizado()`, `eh_admin()` | authenticated | Base das policies. `security definer` e `search_path=''`; leem `auth.jwt()->>'email'` |
-| `hook_antes_criar_usuario(event)` | supabase_auth_admin | Auth Hook *Before User Created* |
+| `hook_antes_criar_usuario(event)` | supabase_auth_admin | Auth Hook *Before User Created*: recusa só e-mail bloqueado (`ativo = false`) ou evento sem e-mail |
+| `registrar_usuario_cadastrado()` | gatilho em `auth.users` (insert e confirmação do e-mail) | Cria a linha `usuario`/`cadastro` na primeira confirmação do e-mail. Ignora o papel dos metadados, preserva o pré-cadastro do admin e não cria linha na troca de e-mail |
 | `destaques_publicos()` | anon, authenticated | Últimos valores dos indicadores públicos (BCB/IBGE) |
 | `corrigir_valor(indice, mes_inicial, mes_final, valor)` | anon, authenticated | Correção por IPCA ou IGP-M, com validação dos parâmetros |
 | `series_valores(codigos, de, ate)`, `curvas_do_dia(data)` | authenticated | Leitura em lote, sujeita ao RLS |

@@ -20,6 +20,8 @@ import banco  # noqa: E402
 ADMIN_TESTE = "admin.teste.rls@exemplo.com"
 USUARIO_TESTE = "usuario.teste.rls@exemplo.com"
 ESTRANHO = "estranho.teste.rls@exemplo.com"
+PRINCIPAL_TESTE = "principal.teste.rls@exemplo.com"
+NOVO = "novo.cadastro.teste.rls@exemplo.com"
 
 
 @pytest.fixture()
@@ -27,9 +29,17 @@ def con():
     conexao = banco.conectar()
     conexao.autocommit = False
     cur = conexao.cursor()
+    # Os testes também rodam contra a produção: nunca esperar muito por um lock.
+    cur.execute("set local lock_timeout = '5s'")
     cur.execute(
         "insert into public.usuarios_autorizados (email, papel) values (%s, 'admin'), (%s, 'usuario')",
         (ADMIN_TESTE, USUARIO_TESTE),
+    )
+    # Num banco novo (CI) não há admin principal: cria um, só dentro da transação.
+    cur.execute(
+        "insert into public.usuarios_autorizados (email, papel, principal) "
+        "select %s, 'admin', true where not exists (select 1 from public.usuarios_autorizados where principal)",
+        (PRINCIPAL_TESTE,),
     )
     yield cur
     conexao.rollback()
@@ -132,19 +142,108 @@ def hook(con, email: str, provedor: str) -> dict:
     return con.fetchone()[0]
 
 
-def test_hook_bloqueia_email_fora_da_lista(con):
-    assert hook(con, ESTRANHO, "google")["error"]["http_code"] == 403
+def test_hook_aceita_email_novo(con):
+    assert hook(con, ESTRANHO, "google") == {}
+    assert hook(con, ESTRANHO, "email") == {}
 
 
 def test_hook_libera_usuario_autorizado_pelo_google(con):
     assert hook(con, USUARIO_TESTE.upper(), "google") == {}
 
 
-def test_hook_so_aceita_cadastro_por_senha_do_admin_principal(con):
-    assert hook(con, USUARIO_TESTE, "email")["error"]["http_code"] == 403
-    assert hook(con, ADMIN_TESTE, "email")["error"]["http_code"] == 403  # admin não principal usa Google
-    assert hook(con, ADMIN_TESTE, "google") == {}
+def test_hook_aceita_senha_de_qualquer_email_ativo(con):
+    assert hook(con, USUARIO_TESTE, "email") == {}
+    assert hook(con, ADMIN_TESTE, "email") == {}
     con.execute("select email from public.usuarios_autorizados where principal")
-    principal = con.fetchone()
-    if principal:
-        assert hook(con, principal[0], "email") == {}
+    assert hook(con, con.fetchone()[0], "email") == {}
+
+
+def test_hook_recusa_email_bloqueado(con):
+    con.execute("update public.usuarios_autorizados set ativo = false where email = %s", (USUARIO_TESTE,))
+    resposta = hook(con, USUARIO_TESTE, "google")
+    assert resposta["error"]["http_code"] == 403
+    assert resposta["error"]["message"] == "Acesso bloqueado."
+
+
+def test_hook_recusa_evento_sem_email(con):
+    assert hook(con, "", "email")["error"]["http_code"] == 403
+
+
+def criar_conta(cur, email: str, metadados: dict | None = None, confirmada: bool = True):
+    """Cria uma conta em auth.users (desfeita no rollback). Pula se o papel não puder."""
+    cur.execute("reset role")
+    cur.execute("savepoint conta")
+    try:
+        cur.execute(
+            "insert into auth.users (id, instance_id, aud, role, email, raw_user_meta_data, raw_app_meta_data,"
+            " email_confirmed_at, created_at, updated_at) values (gen_random_uuid(),"
+            " '00000000-0000-0000-0000-000000000000', 'authenticated', 'authenticated', %s, %s::jsonb, '{}'::jsonb,"
+            " case when %s then now() end, now(), now()) returning id",
+            (email, json.dumps(metadados or {}), confirmada),
+        )
+    except Exception as erro:  # sem privilégio de escrita em auth.users
+        cur.execute("rollback to savepoint conta")
+        pytest.skip(f"não foi possível criar conta de teste: {type(erro).__name__}")
+    return cur.fetchone()[0]
+
+
+def linha(cur, email: str):
+    cur.execute("reset role")
+    cur.execute("select papel, ativo, origem, nome from public.usuarios_autorizados where email = %s", (email,))
+    return cur.fetchone()
+
+
+def test_gatilho_cria_linha_de_cadastro(con):
+    criar_conta(con, NOVO, {"nome": "Fulano de Tal"})
+    assert linha(con, NOVO) == ("usuario", True, "cadastro", "Fulano de Tal")
+
+
+def test_gatilho_ignora_papel_dos_metadados(con):
+    criar_conta(con, NOVO, {"papel": "admin", "role": "admin", "nome": "X"})
+    assert linha(con, NOVO)[0] == "usuario"
+
+
+def test_gatilho_espera_confirmacao(con):
+    conta = criar_conta(con, NOVO, confirmada=False)
+    assert linha(con, NOVO) is None
+    con.execute("update auth.users set email_confirmed_at = now() where id = %s", (conta,))
+    assert linha(con, NOVO)[:3] == ("usuario", True, "cadastro")
+
+
+def test_gatilho_preserva_pre_cadastro(con):
+    criar_conta(con, ADMIN_TESTE, {"nome": "Admin Teste"})
+    assert linha(con, ADMIN_TESTE) == ("admin", True, "admin", "Admin Teste")
+
+
+def test_gatilho_nao_reativa_bloqueado(con):
+    con.execute("update public.usuarios_autorizados set ativo = false where email = %s", (USUARIO_TESTE,))
+    criar_conta(con, USUARIO_TESTE)
+    assert linha(con, USUARIO_TESTE)[:2] == ("usuario", False)
+
+
+def test_gatilho_nao_cria_linha_na_troca_de_email(con):
+    conta = criar_conta(con, NOVO)
+    outro = "outro." + NOVO
+    con.execute("update auth.users set email = %s, email_confirmed_at = now() where id = %s", (outro, conta))
+    assert linha(con, outro) is None
+
+
+def test_bloqueado_nao_ve_dados(con):
+    con.execute("update public.usuarios_autorizados set ativo = false where email = %s", (USUARIO_TESTE,))
+    como(con, "authenticated", USUARIO_TESTE)
+    assert contar(con, "indicadores") == 0
+
+
+def test_usuario_nao_se_autopromove(con):
+    como(con, "authenticated", USUARIO_TESTE)
+    con.execute(f"update public.usuarios_autorizados set papel = 'admin' where email = '{USUARIO_TESTE}'")
+    assert con.rowcount == 0
+    assert falha(con, f"update public.usuarios_autorizados set origem = 'admin' where email = '{USUARIO_TESTE}'")
+    assert falha(con, f"insert into public.usuarios_autorizados (email, papel) values ('{NOVO}', 'admin')")
+
+
+def test_admin_inclui_com_nome_mas_nao_com_origem(con):
+    como(con, "authenticated", ADMIN_TESTE)
+    con.execute(f"insert into public.usuarios_autorizados (email, papel, nome) values ('{NOVO}', 'usuario', 'Novo')")
+    assert falha(con, "insert into public.usuarios_autorizados (email, origem) values ('x.teste.rls@exemplo.com', 'cadastro')")
+    assert linha(con, NOVO) == ("usuario", True, "admin", "Novo")

@@ -46,7 +46,7 @@ export default function CriarRascunho({ relatorioId, jaCriado }: { relatorioId: 
         {estado.enviando ? "Criando…" : "Criar rascunho (não envia)"}
       </button>
       {estado.erro && <p role="alert" className="negativo">{estado.erro}</p>}
-      {estado.reconectar && <AvisoReconectar />}
+      {estado.reconectar && <AvisoReconectar destino="relatorios" />}
       {estado.link && (
         <p role="status">Rascunho criado. <a href={estado.link} target="_blank" rel="noopener noreferrer">Abrir os rascunhos do Gmail</a>.</p>
       )}
