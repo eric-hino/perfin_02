@@ -5,6 +5,24 @@ Neste guia:
 - `<site>` é a URL do site;
 - `<ref>` é o subdomínio da `SUPABASE_URL` (`https://<ref>.supabase.co`).
 
+## Situação em 08/10/2026
+
+| Item | Situação |
+|---|---|
+| Site | Projeto Vercel `perfin-site` (Root Directory `website`), no ar |
+| Portal | Projeto Vercel `perfin-portal` criado (Root Directory `aplicativo/portal`, Node 24, Git conectado), com as variáveis de produção cadastradas; URL `https://perfin-portal.vercel.app` |
+| Coletor | Secret `COLETOR_DATABASE_URL` gravado no GitHub; workflow rodando com sucesso |
+| Ainda falta | Google Cloud (seção 2) e Supabase (seção 3): sem isso a página de login abre, mas o "Entrar com Google" não completa |
+
+**Problemas que já aconteceram:**
+- "Entrar no Portal" mostrava "This page doesn't exist". O site aponta para `NEXT_PUBLIC_PORTAL_URL`, e o projeto do Portal não existia na Vercel (`DEPLOYMENT_NOT_FOUND`).
+- O workflow "Coletar indicadores" falhava com "Defina a variável de ambiente COLETOR_DATABASE_URL" porque o secret não tinha sido gravado.
+- No Windows, se `banco.py senha-coletor --github` disser que o `gh` não está autenticado, mesmo com `gh auth status` dizendo o contrário, rode o comando abaixo. Ele passa o token da sessão por variável de ambiente.
+  ```bash
+  GH_TOKEN="$(gh auth token)" python aplicativo/supabase/banco.py senha-coletor --github
+  ```
+- **Não use `vercel deploy` a partir da pasta do repositório:** o CLI envia arquivos locais fora do git, como `.env` e `dados_perfin.txt`. O deploy é feito pelo `git push`, com o Git conectado.
+
 ## 1. Vercel
 
 **Projetos:** crie 2 a partir do repositório `eric-hino/perfin_02`.
