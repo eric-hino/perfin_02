@@ -4,10 +4,18 @@ updates:
   - package-ecosystem: npm
     directory: /aplicativo/portal
     schedule: { interval: weekly }
+    # typescript-eslint ainda não suporta TypeScript 7 (o lint do CI aborta).
+    ignore:
+      - dependency-name: typescript
+        update-types: ["version-update:semver-major"]
     open-pull-requests-limit: 5
   - package-ecosystem: npm
     directory: /website
     schedule: { interval: weekly }
+    # typescript-eslint ainda não suporta TypeScript 7 (o lint do CI aborta).
+    ignore:
+      - dependency-name: typescript
+        update-types: ["version-update:semver-major"]
     open-pull-requests-limit: 5
   - package-ecosystem: pip
     directory: /aplicativo/coletor
