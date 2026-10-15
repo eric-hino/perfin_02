@@ -11,7 +11,7 @@
     "test": "vitest run"
   },
   "dependencies": {
-    "@supabase/supabase-js": "^2.117.2",
+    "@supabase/supabase-js": "^2.117.3",
     "@vercel/analytics": "^2.0.1",
     "next": "16.4.0",
     "react": "19.3.0",
